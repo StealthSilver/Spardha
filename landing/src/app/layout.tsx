@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       "Excel in JEE preparation with daily tests, DPPs, expert courses, and advanced analytics. Track your progress with milestones and achieve your IIT dreams.",
     images: [
       {
-        url: "/logo.svg",
+        url: "/logo-sm.svg",
         width: 1200,
         height: 630,
         alt: "Spardha - JEE Preparation Platform",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     title: "Spardha - Master JEE with Daily Practice & Analytics",
     description:
       "Excel in JEE preparation with daily tests, DPPs, expert courses, and advanced analytics. Track your progress and achieve your IIT dreams.",
-    images: ["/logo.svg"],
+    images: ["/logo-sm.svg"],
     creator: "@spardha",
     site: "@spardha",
   },
@@ -87,11 +87,11 @@ export const metadata: Metadata = {
   
   icons: {
     icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/logo-sm.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: [{ url: "/logo.svg", type: "image/svg+xml" }],
-    shortcut: ["/logo.svg"],
+    apple: [{ url: "/logo-sm.svg", type: "image/svg+xml" }],
+    shortcut: ["/logo-sm.svg"],
   },
   
   manifest: "/manifest.json",
@@ -121,7 +121,7 @@ export default function RootLayout({
     description:
       "Excel in JEE preparation with daily tests, DPPs, expert courses, and advanced analytics. Track your progress with milestones and achieve your IIT dreams.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://spardha.com",
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://spardha.com"}/logo.svg`,
+    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://spardha.com"}/logo-sm.svg`,
     sameAs: [
       "https://twitter.com/spardha",
       "https://facebook.com/spardha",
@@ -205,6 +205,28 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
+        {/* Favicon and Icons */}
+        <link rel="icon" href="/logo-sm.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="/logo-sm.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/logo-sm.svg" />
+        
+        {/* Open Graph Image */}
+        <meta property="og:image" content="/logo-sm.svg" />
+        <meta property="og:image:type" content="image/svg+xml" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Spardha - JEE Preparation Platform" />
+        
+        {/* Twitter Card Image */}
+        <meta name="twitter:image" content="/logo-sm.svg" />
+        <meta name="twitter:image:alt" content="Spardha - JEE Preparation Platform" />
+        
+        {/* Additional Meta Tags */}
+        <meta name="theme-color" content="#393f5b" />
+        <meta name="msapplication-TileColor" content="#393f5b" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
