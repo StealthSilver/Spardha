@@ -1,7 +1,19 @@
+import Navbar from "@/components/sections/Navbar";
+import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
+import Features from "@/components/sections/Features";
+import Testimonials from "@/components/sections/Testimonials";
+import Footer from "@/components/sections/Footer";
+
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      Spardha - The only platform you need for your JEE preperation
-    </div>
+    <main className="bg-black min-h-screen">
+      <Navbar />
+      <Hero />
+      <About />
+      <Features />
+      <Testimonials />
+      <Footer />
+    </main>
   );
 }
