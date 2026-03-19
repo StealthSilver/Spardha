@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-[#f3f6f8] text-[#070a05] fixed top-0 left-0 z-50 border-b border-dotted border-[#393f5b]/15">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-10 py-4 flex items-center justify-between">
         {/* Left Section - Logo and Hamburger */}
         <div className="flex items-center gap-4">
           {/* Logo */}
