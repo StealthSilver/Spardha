@@ -144,10 +144,10 @@ export default function QuestionSolvingAnimation() {
   }, [currentQuestionIndex, currentQuestion.timeLimit]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center p-8">
-      {/* Floating background elements */}
+    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center p-4 sm:p-6 md:p-8">
+      {/* Floating background elements - Responsive sizes */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-[#393f5b]/5 rounded-full blur-2xl sm:blur-3xl"
         animate={
           shouldReduceMotion
             ? {}
@@ -164,7 +164,7 @@ export default function QuestionSolvingAnimation() {
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 bg-[#393f5b]/5 rounded-full blur-2xl sm:blur-3xl"
         animate={
           shouldReduceMotion
             ? {}
@@ -182,9 +182,9 @@ export default function QuestionSolvingAnimation() {
         }}
       />
 
-      {/* Main card */}
+      {/* Main card - Responsive */}
       <motion.div
-        className="relative w-full max-w-md bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
+        className="relative w-full max-w-md bg-white backdrop-blur-xl rounded-xl sm:rounded-2xl border border-[#070a05]/10 shadow-2xl overflow-hidden"
         initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
@@ -195,12 +195,12 @@ export default function QuestionSolvingAnimation() {
         }}
       >
         {/* Subtle glow effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#393f5b]/5 via-transparent to-[#393f5b]/5 pointer-events-none" />
         
-        {/* Timer */}
-        <div className="relative px-6 pt-5 pb-3 flex items-center justify-between border-b border-white/5">
+        {/* Timer - Responsive padding */}
+        <div className="relative px-4 sm:px-6 pt-4 sm:pt-5 pb-2 sm:pb-3 flex items-center justify-between border-b border-[#070a05]/5">
           <motion.div
-            className="text-xs font-light text-white/40 tracking-wider uppercase"
+            className="text-[0.625rem] sm:text-xs font-light text-[#070a05]/40 tracking-wider uppercase"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: shouldReduceMotion ? 0 : 0.3 }}
@@ -208,7 +208,7 @@ export default function QuestionSolvingAnimation() {
             Question {currentQuestionIndex + 1}
           </motion.div>
           <motion.div
-            className="font-mono text-sm font-medium text-white/60"
+            className="font-mono text-xs sm:text-sm font-medium text-[#070a05]/60"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: shouldReduceMotion ? 0 : 0.5 }}
@@ -223,8 +223,8 @@ export default function QuestionSolvingAnimation() {
           </motion.div>
         </div>
 
-        {/* Question */}
-        <div className="px-6 pt-6 pb-4">
+        {/* Question - Responsive padding and text */}
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentQuestionIndex}
@@ -232,15 +232,15 @@ export default function QuestionSolvingAnimation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
-              className="text-lg font-light text-white/90 leading-relaxed"
+              className="text-base sm:text-lg font-light text-[#070a05]/90 leading-relaxed"
             >
               {currentQuestion.question}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Solution steps */}
-        <div className="px-6 pb-6 space-y-3">
+        {/* Solution steps - Responsive spacing */}
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6 space-y-2 sm:space-y-3">
           <AnimatePresence>
             {currentQuestion.steps.map((step, index) => (
               index <= currentStep && (
@@ -259,21 +259,21 @@ export default function QuestionSolvingAnimation() {
                   className="relative"
                 >
                   <div
-                    className={`relative px-4 py-3 rounded-lg ${
+                    className={`relative px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg ${
                       step.isAnswer
-                        ? "bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20"
-                        : "bg-white/5 border border-white/5"
+                        ? "bg-[#393f5b]/10 border border-[#393f5b]/20"
+                        : "bg-[#070a05]/5 border border-[#070a05]/5"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-light text-white/40 min-w-[60px]">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className="text-[0.625rem] sm:text-xs font-light text-[#070a05]/40 min-w-[50px] sm:min-w-[60px]">
                         Step {step.id}
                       </span>
                       <span
-                        className={`font-light ${
+                        className={`text-sm sm:text-base font-light ${
                           step.isAnswer
-                            ? "text-white/95 font-normal"
-                            : "text-white/70"
+                            ? "text-[#070a05]/95 font-normal"
+                            : "text-[#070a05]/70"
                         }`}
                       >
                         {step.text}
@@ -283,7 +283,7 @@ export default function QuestionSolvingAnimation() {
                     {/* Answer highlight glow */}
                     {step.isAnswer && !shouldReduceMotion && (
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur-xl"
+                        className="absolute inset-0 bg-[#393f5b]/10 rounded-lg blur-xl"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0, 1, 0.5] }}
                         transition={{
@@ -299,7 +299,7 @@ export default function QuestionSolvingAnimation() {
           </AnimatePresence>
         </div>
 
-        {/* Correct badge */}
+        {/* Correct badge - Responsive */}
         <AnimatePresence>
           {showCorrect && (
             <motion.div
@@ -311,26 +311,26 @@ export default function QuestionSolvingAnimation() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.8 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: "easeOut" }}
-              className="mx-6 mb-5 flex items-center gap-2 px-4 py-2.5 bg-emerald-500/10 border border-emerald-400/20 rounded-lg"
+              className="mx-4 sm:mx-6 mb-4 sm:mb-5 flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/10 border border-emerald-400/20 rounded-lg"
             >
-              <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center">
+              <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
                 <Check size={14} className="text-emerald-400" />
               </div>
-              <span className="text-sm font-light text-emerald-400">
+              <span className="text-xs sm:text-sm font-light text-emerald-400">
                 Correct Solution
               </span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Accuracy indicator */}
-        <div className="px-6 pb-6">
+        {/* Accuracy indicator - Responsive */}
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-light text-white/40 tracking-wider uppercase">
+            <span className="text-[0.625rem] sm:text-xs font-light text-[#070a05]/40 tracking-wider uppercase">
               Accuracy
             </span>
             <motion.span
-              className="text-sm font-medium text-white/70"
+              className="text-xs sm:text-sm font-medium text-[#070a05]/70"
               key={accuracy}
               initial={{ opacity: 0.5, scale: shouldReduceMotion ? 1 : 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -339,9 +339,9 @@ export default function QuestionSolvingAnimation() {
               {accuracy}%
             </motion.span>
           </div>
-          <div className="relative h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="relative h-1.5 bg-[#070a05]/5 rounded-full overflow-hidden">
             <motion.div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+              className="absolute inset-y-0 left-0 bg-[#393f5b] rounded-full"
               initial={{ width: "0%" }}
               animate={{ width: `${accuracy}%` }}
               transition={{
@@ -351,7 +351,7 @@ export default function QuestionSolvingAnimation() {
             />
             {!shouldReduceMotion && (
               <motion.div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-sm opacity-50"
+                className="absolute inset-y-0 left-0 bg-[#393f5b]/50 rounded-full blur-sm opacity-50"
                 initial={{ width: "0%" }}
                 animate={{ width: `${accuracy}%` }}
                 transition={{
@@ -362,7 +362,7 @@ export default function QuestionSolvingAnimation() {
             )}
           </div>
           <motion.p
-            className="mt-2 text-xs font-light text-white/30 text-center"
+            className="mt-2 text-[0.625rem] sm:text-xs font-light text-[#070a05]/30 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: isComplete ? 1 : 0 }}
             transition={{ delay: shouldReduceMotion ? 0 : 0.5 }}
@@ -372,12 +372,12 @@ export default function QuestionSolvingAnimation() {
         </div>
       </motion.div>
 
-      {/* Floating particles */}
+      {/* Floating particles - Hidden on very small screens for performance */}
       {!shouldReduceMotion &&
         [...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white/10 rounded-full blur-sm"
+            className="absolute w-1 h-1 bg-[#070a05]/10 rounded-full blur-sm hidden sm:block"
             style={{
               left: `${20 + i * 10}%`,
               top: `${30 + (i % 3) * 20}%`,
