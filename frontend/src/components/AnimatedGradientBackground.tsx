@@ -2,85 +2,139 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Subtle cyan and blue color palette
+// Beautiful gradient palette: sea green → cyan → blue → dark blue
 const FIBER_COLORS = [
-  new THREE.Color(0x00CED1),  // Dark turquoise
-  new THREE.Color(0x4682B4),  // Steel blue
-  new THREE.Color(0x5F9EA0),  // Cadet blue
-  new THREE.Color(0x87CEEB),  // Sky blue
-  new THREE.Color(0x6495ED),  // Cornflower blue
-  new THREE.Color(0x00BFFF),  // Deep sky blue
-  new THREE.Color(0x48D1CC),  // Medium turquoise
-  new THREE.Color(0x1E90FF),  // Dodger blue
-  new THREE.Color(0x20B2AA),  // Light sea green
-  new THREE.Color(0x7B68EE),  // Medium slate blue
+  // Sea Green shades
+  new THREE.Color(0x20E6B8),  // Bright sea green
+  new THREE.Color(0x2FFFCC),  // Vibrant mint green
+  new THREE.Color(0x00F5C4),  // Brilliant turquoise green
+  new THREE.Color(0x40FFD4),  // Bright seafoam
+  
+  // Cyan shades
+  new THREE.Color(0x00FFFF),  // Pure bright cyan
+  new THREE.Color(0x00F0FF),  // Ultra bright cyan
+  new THREE.Color(0x1AFFFF),  // Electric cyan
+  new THREE.Color(0x40F8FF),  // Bright light cyan
+  
+  // Blue shades
+  new THREE.Color(0x00D4FF),  // Vivid sky blue
+  new THREE.Color(0x00BFFF),  // Bright dodger blue
+  new THREE.Color(0x1E90FF),  // Brilliant blue
+  new THREE.Color(0x4DB8FF),  // Bright cornflower blue
+  
+  // Dark Blue shades
+  new THREE.Color(0x0080FF),  // Bright deep blue
+  new THREE.Color(0x0066CC),  // Rich royal blue
+  new THREE.Color(0x0099FF),  // Vibrant azure blue
+  new THREE.Color(0x3399FF),  // Light deep blue
 ];
 
 // Configuration for dense fiber bundle with twisting strands
 const FIBER_CONFIG = {
-  count: 800,             // Very dense fiber bundle
+  count: 250,             // Very dense fiber bundle
   segmentsPerFiber: 400,  // Extra smooth for helical motion
-  fiberWidth: 0.015,      // Thinner strands for density
-  helixAmplitude: 0.4,    // Amplitude of helical motion
-  helixFrequency: 4.0,    // Frequency of helical twisting
+  fiberWidth: 0.05,      // Thinner strands for density
+  helixFrequency: 5.0,    // Number of helical rotations along the path
   bundleRadius: 0.8,      // Radius of the fiber bundle
-  length: 50,             // Extended length to go beyond viewport
+  rotationSpeed: 0.05,    // Speed of rotation around central axis
 };
 
-// Single fiber strand with helical twisting motion
+// Single fiber strand rotating around the central axis
 function AnimatedFiber({ 
   angleInBundle,
   radiusInBundle,
   color, 
-  phaseOffset,
-  helixSpeed,
-  depthOffset
+  phaseOffset
 }: { 
   angleInBundle: number;
   radiusInBundle: number;
   color: THREE.Color; 
   phaseOffset: number;
-  helixSpeed: number;
-  depthOffset: number;
 }) {
+  const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   
-  // Create fiber path extending beyond viewport with helical motion
-  const geometry = useMemo(() => {
+  // Create fiber path with a turning point in the middle
+  const initialGeometry = useMemo(() => {
     const points: THREE.Vector3[] = [];
     const segments = FIBER_CONFIG.segmentsPerFiber;
     
-    // Extend path beyond viewport - start way above, end way below/right
-    const startX = -5;
-    const startY = 25;  // Way above viewport
-    const startZ = depthOffset;
+    // Fixed start point (top center)
+    const startX = 0;
+    const startY = 12;
+    const startZ = 1;
     
-    const endX = 15;    // Way to the right, beyond viewport
-    const endY = -25;   // Way below viewport
-    const endZ = depthOffset;
+    // Middle turning point (creates the fabric bend)
+    const midX = 4;
+    const midY = 6;
+    const midZ = 0;  // Pull it back in Z to create the bend
+    
+    // Fixed end point (bottom left - shifted more to the left)
+    const endX = -12;
+    const endY = -30;
+    const endZ = 6;
     
     for (let i = 0; i <= segments; i++) {
       const t = i / segments;
       
-      // Linear interpolation for main path
-      const baseX = startX + (endX - startX) * t;
-      const baseY = startY + (endY - startY) * t;
-      const baseZ = startZ + (endZ - startZ) * t;
+      // Quadratic Bezier curve through the three points
+      // Creates smooth bend through the middle point
+      const axisX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * endX;
+      const axisY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midY + t * t * endY;
+      const axisZ = (1 - t) * (1 - t) * startZ + 2 * (1 - t) * t * midZ + t * t * endZ;
       
-      // Individual helical motion for each strand
-      // Each strand spirals around its own path
-      const helixAngle = t * Math.PI * FIBER_CONFIG.helixFrequency + angleInBundle + phaseOffset;
-      const helixRadius = radiusInBundle;
+      // Calculate tangent direction at this point for proper helical wrapping
+      const tangentX = 2 * (1 - t) * (midX - startX) + 2 * t * (endX - midX);
+      const tangentY = 2 * (1 - t) * (midY - startY) + 2 * t * (endY - midY);
+      const tangentZ = 2 * (1 - t) * (midZ - startZ) + 2 * t * (endZ - midZ);
+      const tangentLength = Math.sqrt(tangentX * tangentX + tangentY * tangentY + tangentZ * tangentZ);
       
-      // Helical offset perpendicular to the main direction
-      const helixX = Math.cos(helixAngle) * helixRadius * FIBER_CONFIG.helixAmplitude;
-      const helixZ = Math.sin(helixAngle) * helixRadius * FIBER_CONFIG.helixAmplitude;
+      // Normalized tangent direction
+      const normDirX = tangentX / tangentLength;
+      const normDirY = tangentY / tangentLength;
+      const normDirZ = tangentZ / tangentLength;
+      
+      // Calculate helical position around the curved axis
+      const helixAngle = t * Math.PI * 2 * FIBER_CONFIG.helixFrequency + angleInBundle;
+      
+      // Create perpendicular vectors for helical motion
+      let perpX, perpY, perpZ;
+      if (Math.abs(normDirY) < 0.9) {
+        perpX = 0;
+        perpY = 1;
+        perpZ = 0;
+      } else {
+        perpX = 1;
+        perpY = 0;
+        perpZ = 0;
+      }
+      
+      // Make it perpendicular using cross product
+      const crossX = normDirY * perpZ - normDirZ * perpY;
+      const crossY = normDirZ * perpX - normDirX * perpZ;
+      const crossZ = normDirX * perpY - normDirY * perpX;
+      const crossLength = Math.sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+      
+      const perp1X = crossX / crossLength;
+      const perp1Y = crossY / crossLength;
+      const perp1Z = crossZ / crossLength;
+      
+      // Second perpendicular vector (perpendicular to both tangent and perp1)
+      const perp2X = normDirY * perp1Z - normDirZ * perp1Y;
+      const perp2Y = normDirZ * perp1X - normDirX * perp1Z;
+      const perp2Z = normDirX * perp1Y - normDirY * perp1X;
+      
+      // Helical offset using both perpendicular vectors
+      const radius = radiusInBundle;
+      const offsetX = (Math.cos(helixAngle) * perp1X + Math.sin(helixAngle) * perp2X) * radius;
+      const offsetY = (Math.cos(helixAngle) * perp1Y + Math.sin(helixAngle) * perp2Y) * radius;
+      const offsetZ = (Math.cos(helixAngle) * perp1Z + Math.sin(helixAngle) * perp2Z) * radius;
       
       points.push(new THREE.Vector3(
-        baseX + helixX,
-        baseY,
-        baseZ + helixZ
+        axisX + offsetX,
+        axisY + offsetY,
+        axisZ + offsetZ
       ));
     }
     
@@ -94,52 +148,47 @@ function AnimatedFiber({
     );
     
     return tubeGeometry;
-  }, [angleInBundle, radiusInBundle, phaseOffset, depthOffset]);
+  }, [angleInBundle, radiusInBundle]);
 
-  // Animated helical motion
+  // Rotation animation - rotate the entire group
   useFrame((state) => {
-    if (!meshRef.current || !materialRef.current) return;
+    if (!groupRef.current || !materialRef.current) return;
     
     const time = state.clock.elapsedTime;
     
-    // Animate the phase to create moving helical pattern
-    // This makes each strand appear to spiral along its path
-    const animatedPhase = time * helixSpeed;
+    // Rotate around Y axis for twisting effect
+    groupRef.current.rotation.y = time * FIBER_CONFIG.rotationSpeed + phaseOffset;
     
-    // Update geometry with animated helix
-    const positions = meshRef.current.geometry.attributes.position;
-    const segments = FIBER_CONFIG.segmentsPerFiber;
-    
-    // Subtle pulsing opacity
-    const pulse = 0.75 + Math.sin(time * 1.0 + phaseOffset) * 0.15;
+    // Lower pulsing opacity for better text visibility
+    const pulse = 0.35 + Math.sin(time * 0.8 + phaseOffset) * 0.08;
     materialRef.current.opacity = pulse;
     
-    // Subtle emissive intensity variation
-    materialRef.current.emissiveIntensity = 0.25 + Math.sin(time * 0.6 + phaseOffset) * 0.15;
+    // Reduced emissive intensity for less distraction
+    materialRef.current.emissiveIntensity = 0.22 + Math.sin(time * 0.5 + phaseOffset) * 0.08;
   });
 
   return (
-    <mesh ref={meshRef} geometry={geometry} castShadow receiveShadow>
-      <meshStandardMaterial 
-        ref={materialRef}
-        color={color}
-        emissive={color}
-        emissiveIntensity={0.25}
-        transparent 
-        opacity={0.8}
-        roughness={0.2}
-        metalness={0.7}
-        envMapIntensity={1.5}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <group ref={groupRef}>
+      <mesh ref={meshRef} geometry={initialGeometry} castShadow receiveShadow>
+        <meshStandardMaterial 
+          ref={materialRef}
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.22}
+          transparent 
+          opacity={0.4}
+          roughness={0.3}
+          metalness={0.6}
+          envMapIntensity={1.1}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
   );
 }
 
 // Dense fiber bundle with helical arrangement
 function FiberField() {
-  const groupRef = useRef<THREE.Group>(null);
-  
   const fibers = useMemo(() => {
     const fiberData = [];
     
@@ -155,29 +204,17 @@ function FiberField() {
       // Radius from center (multiple concentric layers)
       const radius = FIBER_CONFIG.bundleRadius * (0.2 + (layer / 8) * 0.8);
       
-      // Depth variation for more 3D density
-      const depth = (Math.random() - 0.5) * 2;
-      
       fiberData.push({
         id: i,
         angleInBundle: angle,
         radiusInBundle: radius,
         color: FIBER_COLORS[Math.floor(Math.random() * FIBER_COLORS.length)].clone(),
         phaseOffset: Math.random() * Math.PI * 2,
-        helixSpeed: 0.3 + Math.random() * 0.4,
-        depthOffset: depth,
       });
     }
     
     return fiberData;
   }, []);
-
-  // Slowly rotate entire bundle for additional twisting effect
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.05;
-    }
-  });
 
   return (
     <>
@@ -200,7 +237,7 @@ function FiberField() {
       {/* Additional depth light */}
       <pointLight position={[0, 0, -5]} intensity={0.5} color="#20B2AA" />
       
-      <group ref={groupRef}>
+      <group>
         {fibers.map((fiber) => (
           <AnimatedFiber
             key={fiber.id}
@@ -208,8 +245,6 @@ function FiberField() {
             radiusInBundle={fiber.radiusInBundle}
             color={fiber.color}
             phaseOffset={fiber.phaseOffset}
-            helixSpeed={fiber.helixSpeed}
-            depthOffset={fiber.depthOffset}
           />
         ))}
       </group>
