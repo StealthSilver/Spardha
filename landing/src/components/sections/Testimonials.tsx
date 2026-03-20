@@ -297,7 +297,6 @@ export default function Testimonials() {
               prefersReducedMotion
                 ? {}
                 : {
-                    scale: 1.05,
                     boxShadow: "0 20px 40px rgba(57, 63, 91, 0.2)",
                   }
             }

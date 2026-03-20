@@ -14,36 +14,36 @@ export default function StoryFrame({ children, ctaProgress, scrollYProgress }: S
   const ctaOpacity = useTransform(ctaProgress, [0, 0.7, 1], [0, 0, 1]);
   const ctaScale = useTransform(ctaProgress, [0.7, 1], [0.9, 1]);
 
-  // Define color stops for each time of day with higher opacity
-  // Morning (0-0.2): Sunrise - yellow, orange, purple
-  const morningGradient = "radial-gradient(circle at 50% 130%, rgba(255, 183, 77, 0.35) 0%, rgba(255, 138, 101, 0.28) 35%, rgba(156, 136, 255, 0.22) 65%, transparent 100%)";
+  // Define subtle, inspiring color gradients that match the website's concept
+  // Phase 1 (0-0.2): Soft teal with muted blue - Focus & Clarity
+  const phase1Gradient = "radial-gradient(circle at 50% 130%, rgba(94, 196, 188, 0.25) 0%, rgba(57, 63, 91, 0.20) 35%, rgba(104, 159, 183, 0.18) 65%, transparent 100%)";
   
-  // Afternoon (0.2-0.4): Bright day - light yellow, white, light orange
-  const afternoonGradient = "radial-gradient(circle at 50% 130%, rgba(255, 235, 59, 0.32) 0%, rgba(255, 245, 157, 0.25) 35%, rgba(255, 224, 178, 0.28) 65%, transparent 100%)";
+  // Phase 2 (0.2-0.4): Gentle lavender with sage - Growth & Balance
+  const phase2Gradient = "radial-gradient(circle at 50% 130%, rgba(168, 162, 196, 0.22) 0%, rgba(147, 179, 169, 0.20) 35%, rgba(182, 194, 201, 0.18) 65%, transparent 100%)";
   
-  // Evening (0.4-0.6): Sunset - orange, purple, violet
-  const eveningGradient = "radial-gradient(circle at 50% 130%, rgba(255, 152, 0, 0.38) 0%, rgba(179, 136, 255, 0.32) 35%, rgba(138, 43, 226, 0.28) 65%, transparent 100%)";
+  // Phase 3 (0.4-0.6): Warm coral with soft peach - Energy & Progress
+  const phase3Gradient = "radial-gradient(circle at 50% 130%, rgba(237, 158, 142, 0.24) 0%, rgba(255, 198, 171, 0.20) 35%, rgba(188, 170, 164, 0.18) 65%, transparent 100%)";
   
-  // Night (0.6-0.8): Dark - blue, violet, grey
-  const nightGradient = "radial-gradient(circle at 50% 130%, rgba(63, 81, 181, 0.35) 0%, rgba(103, 58, 183, 0.30) 35%, rgba(96, 125, 139, 0.25) 65%, transparent 100%)";
+  // Phase 4 (0.6-0.8): Deep slate with hints of teal - Confidence & Achievement
+  const phase4Gradient = "radial-gradient(circle at 50% 130%, rgba(76, 88, 115, 0.26) 0%, rgba(94, 196, 188, 0.18) 35%, rgba(112, 128, 144, 0.20) 65%, transparent 100%)";
 
-  // CTA (0.8-1.0): Fade to white/neutral
+  // CTA (0.8-1.0): Clean & Minimal - Ready to Act
   const ctaGradient = "radial-gradient(circle at 50% 130%, rgba(255, 255, 255, 0.15) 0%, transparent 60%)";
 
-  // Create opacity values aligned with story phases
-  // Morning: 0-0.2 scroll (step 0 - when morning story is active)
-  const morningOpacity = useTransform(scrollYProgress, [0, 0.05, 0.15, 0.2], [1, 1, 1, 0]);
+  // Create opacity values for smooth phase transitions
+  // Phase 1: 0-0.2 scroll
+  const phase1Opacity = useTransform(scrollYProgress, [0, 0.05, 0.15, 0.2], [1, 1, 1, 0]);
   
-  // Afternoon: 0.2-0.4 scroll (step 1 - when afternoon story is active)
-  const afternoonOpacity = useTransform(scrollYProgress, [0.15, 0.2, 0.35, 0.4], [0, 1, 1, 0]);
+  // Phase 2: 0.2-0.4 scroll
+  const phase2Opacity = useTransform(scrollYProgress, [0.15, 0.2, 0.35, 0.4], [0, 1, 1, 0]);
   
-  // Evening: 0.4-0.6 scroll (step 2 - when evening story is active)
-  const eveningOpacity = useTransform(scrollYProgress, [0.35, 0.4, 0.55, 0.6], [0, 1, 1, 0]);
+  // Phase 3: 0.4-0.6 scroll
+  const phase3Opacity = useTransform(scrollYProgress, [0.35, 0.4, 0.55, 0.6], [0, 1, 1, 0]);
   
-  // Night: 0.6-0.8 scroll (step 3 - when night story is active)
-  const nightOpacity = useTransform(scrollYProgress, [0.55, 0.6, 0.75, 0.8], [0, 1, 1, 0]);
+  // Phase 4: 0.6-0.8 scroll
+  const phase4Opacity = useTransform(scrollYProgress, [0.55, 0.6, 0.75, 0.8], [0, 1, 1, 0]);
   
-  // CTA: 0.8-1.0 scroll (step 4 - when CTA is active)
+  // CTA: 0.8-1.0 scroll
   const ctaGradientOpacity = useTransform(scrollYProgress, [0.75, 0.8, 1], [0, 1, 1]);
 
   return (
@@ -60,33 +60,33 @@ export default function StoryFrame({ children, ctaProgress, scrollYProgress }: S
           ease: "easeInOut",
         }}
       >
-        {/* Time-of-day gradient overlays - stacked for smooth transitions */}
+        {/* Gradient phase overlays - stacked for smooth transitions */}
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-2xl"
           style={{
-            background: morningGradient,
-            opacity: morningOpacity,
+            background: phase1Gradient,
+            opacity: phase1Opacity,
           }}
         />
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-2xl"
           style={{
-            background: afternoonGradient,
-            opacity: afternoonOpacity,
+            background: phase2Gradient,
+            opacity: phase2Opacity,
           }}
         />
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-2xl"
           style={{
-            background: eveningGradient,
-            opacity: eveningOpacity,
+            background: phase3Gradient,
+            opacity: phase3Opacity,
           }}
         />
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-2xl"
           style={{
-            background: nightGradient,
-            opacity: nightOpacity,
+            background: phase4Gradient,
+            opacity: phase4Opacity,
           }}
         />
         <motion.div
@@ -124,12 +124,6 @@ export default function StoryFrame({ children, ctaProgress, scrollYProgress }: S
             </p>
             <button className="group relative bg-[#393f5b] text-white px-8 py-4 rounded-lg text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-[#2f3450] overflow-hidden">
               <span className="relative z-10">Start Competing</span>
-              <motion.div
-                className="absolute inset-0 bg-white/10"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.5 }}
-              />
             </button>
           </div>
         </motion.div>

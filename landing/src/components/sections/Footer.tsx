@@ -61,10 +61,10 @@ export default function Footer() {
   );
 
   const socialLinks = [
-    { icon: XIcon, href: "#", label: "X (Twitter)" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Mail, href: "#", label: "Email" },
+    { icon: XIcon, href: "https://x.com/silver_srs", label: "X (Twitter)" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/rajat-saraswat-0491a3259/", label: "LinkedIn" },
+    { icon: Github, href: "https://github.com/StealthSilver/Spardha", label: "GitHub" },
+    { icon: Mail, href: "mailto:saraswatrajat12@gmail.com", label: "Email" },
   ];
 
   return (
@@ -217,7 +217,6 @@ export default function Footer() {
                 className="w-full px-4 py-2.5 text-sm bg-white/60 backdrop-blur-xl border border-[#070a05]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#393f5b]/30 focus:border-[#393f5b]/30 transition-all duration-200 placeholder:text-[#070a05]/40"
               />
               <motion.button
-                whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                 whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                 className="w-full bg-[#393f5b] text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:bg-[#2f3450]"
               >
@@ -250,6 +249,8 @@ export default function Footer() {
                 <motion.a
                   key={social.label}
                   href={social.href}
+                  target={social.href.startsWith('mailto:') ? undefined : "_blank"}
+                  rel={social.href.startsWith('mailto:') ? undefined : "noopener noreferrer"}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={isInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.3, delay: 0.6 + index * 0.05 }}
